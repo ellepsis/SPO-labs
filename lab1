@@ -1,0 +1,53 @@
+#!/bin/bash
+#Var 12
+
+errorMessage () {
+echo "Произошла ошибка" >&2
+}
+
+nameMessage () {
+echo "Введите имя" 
+}
+
+echoVariations () {
+echo "1. Создать каталог
+2. Сменить текущий каталог
+3. Напечатать содержимое текущего каталога
+4. Переместить файл
+5. Удалить каталог с его содержимым
+6. Выйти из программы"
+}
+
+while true
+do
+        echoVariations
+        read x || exit 0 
+        case "$x" in
+        1) echo "Введите имя директории" 
+           read name || exit 0 
+           mkdir -- "$name" 2>> ~/lab1_err || errorMessage;;
+        2) echo "Введите путь"
+           read path || exit 0
+           cd -- "$path" 2>> ~/lab1_err || errorMessage;;
+        3) ls 2>> ~/lab1_err || errorMessage ;;
+        4) echo "Введите имя файла"
+           read name
+           echo "Введите путь назначения"
+           read path
+           mv -- "$name" "$path" 2>> ~/lab1_err || errorMessage;;
+        5) echo "Введите имя каталога"
+           read name
+           if [[ ! -d "$name" ]]   
+           then
+                echo "File dosnt exist" >> ~/lab1_err; errorMessage; 
+                continue;
+           fi 
+           echo "rm: remove " "$name" " (да/нет)?" 
+           read answer
+           if [ "yes" = "$answer" ]; then 
+                rm -r -- "$name" 2>> ~/lab1_err || errorMessage
+           fi;;
+        6) exit 0;;
+esac
+done
+
